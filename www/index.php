@@ -19,7 +19,7 @@ $router = new Router();
 
 // GET routes
 $router->get('/', function () {
-    requireLogin();
+    $userLoggedIn = isset($_SESSION['user_id']);
     require __DIR__ . '/views/home.php';
 });
 $router->get('/login', function () {

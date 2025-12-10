@@ -1,8 +1,4 @@
-
-<?php
-// Obsah domovskej stránky
-$content = '<h2>Domovská stránka</h2><p>Vitaj, ' . htmlspecialchars($_SESSION['username']) . '!</p>';
-
-// na konci layout.php vložíme tento obsah
+<?php 
+$title = "Domov"; 
+$content = __DIR__ . '/home_content.php'; 
 require __DIR__ . '/layout.php';
-
