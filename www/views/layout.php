@@ -24,8 +24,14 @@
     </nav>
 </header>
 <main>
-    <div class="container">
-        <?php require $content ?? ''; ?>
+     <div class="container">
+        <?php
+        if (isset($content) && file_exists($content)) {
+            require $content;
+        } else {
+            echo "<p>Content file not found.</p>";
+        }
+        ?>
     </div>
 </main>
 </body>

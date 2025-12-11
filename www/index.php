@@ -8,7 +8,8 @@ session_start();
 require __DIR__ . '/src/Router.php';
 require __DIR__ . '/src/db.php';   // musí nastaviť $pdo
 
-function requireLogin() {
+function requireLogin()
+{
     if (!isset($_SESSION['user_id'])) {
         header("Location: /login");
         exit;
@@ -18,16 +19,36 @@ function requireLogin() {
 $router = new Router();
 
 // GET routes
-$router->get('/', function () {
-    $userLoggedIn = isset($_SESSION['user_id']);
-    require __DIR__ . '/views/home.php';
-});
+
 $router->get('/login', function () {
-    require __DIR__ . '/views/auth/login.php';
+     $content = __DIR__ . '/views/auth/login.php';
+    require __DIR__ . '/views/layout.php';
 });
 $router->get('/register', function () {
-    require __DIR__ . '/views/auth/register.php';
+    $content = __DIR__ . '/views/auth/register.php';
+    require __DIR__ . '/views/layout.php';
 });
+$router->get('/', function () use ($pdo) {
+
+    $userLoggedIn = isset($_SESSION['user_id']);
+
+    $stmt = $pdo->query("SELECT * FROM posts ORDER BY created_at DESC");
+    $posts = $stmt->fetchAll();
+
+    $content = __DIR__ . '/views/home_content.php';
+    require __DIR__ . '/views/layout.php';
+});
+
+$router->get('/posts/create', function () {
+    requireLogin(); // presmeruje na /login, ak nie je prihlásený
+
+    $title = "Nový článok";
+    $content = __DIR__ . '/views/posts/create_content.php'; // tu musí byť $content
+
+    require __DIR__ . '/views/layout.php';
+});
+
+
 
 // POST routes
 $router->post('/login', function () use ($pdo) {
@@ -88,10 +109,32 @@ $router->post('/register', function () use ($pdo) {
     exit;
 });
 
+$router->post('/posts/store', function () use ($pdo) {
+    requireLogin();
+
+    $title = trim($_POST['title'] ?? '');
+    $content = trim($_POST['content'] ?? '');
+
+    if ($title === '' || $content === '') {
+        die("Vyplň nadpis a obsah.");
+    }
+
+    $stmt = $pdo->prepare(
+        "INSERT INTO posts (title, content, user_id, created_at)
+         VALUES (?, ?, ?, NOW())"
+    );
+
+    $stmt->execute([$title, $content, $_SESSION['user_id']]);
+
+    header("Location: /");
+    exit;
+});
+
+
 
 // logout route (rýchlo)
-$router->get('/logout', function() {
-   
+$router->get('/logout', function () {
+
     session_unset();
     session_destroy();
     header('Location: /login');
@@ -99,4 +142,3 @@ $router->get('/logout', function() {
 });
 
 $router->run();
- 
