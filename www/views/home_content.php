@@ -11,7 +11,14 @@
                 <h3><?= htmlspecialchars($post['title']) ?></h3>
                 <p><?= nl2br(htmlspecialchars(substr($post['content'], 0, 200))) ?>...</p>
                 <small>Publikované: <?= $post['created_at'] ?></small>
+                <?php if($userLoggedIn && $post['user_id'] == $_SESSION['user_id']): ?>
+        <div>
+            <a href="/posts/edit?id=<?= $post['id'] ?>">Upraviť</a> |
+            <a href="/posts/delete?id=<?= $post['id'] ?>" onclick="return confirm('Naozaj vymazať?')">Vymazať</a>
+        </div>
+    <?php endif; ?>
             </article>
+           
             <hr>
         <?php endforeach; ?>
 

@@ -48,6 +48,45 @@ $router->get('/posts/create', function () {
     require __DIR__ . '/views/layout.php';
 });
 
+$router->get('/posts/edit', function () use ($pdo) {
+    requireLogin();
+
+    $id = $_GET['id'] ?? null;
+    if (!$id) {
+        die("Chýba ID článku.");
+    }
+
+    $stmt = $pdo->prepare("SELECT * FROM posts WHERE id = ? AND user_id = ?");
+    $stmt->execute([$id, $_SESSION['user_id']]);
+    $post = $stmt->fetch();
+
+    if (!$post) {
+        die("Článok nenájdený alebo nemáš oprávnenie.");
+    }
+
+    $title = "Upraviť článok";
+    $content = __DIR__ . '/views/posts/edit_content.php';
+    require __DIR__ . '/views/layout.php';
+});
+
+
+
+$router->get('/posts/delete', function () use ($pdo) {
+    requireLogin();
+
+    $postId = $_GET['id'] ?? null;
+    if (!$postId) {
+        header("Location: /");
+        exit;
+    }
+
+    $stmt = $pdo->prepare("DELETE FROM posts WHERE id = ? AND user_id = ?");
+    $stmt->execute([$postId, $_SESSION['user_id']]);
+
+    header("Location: /");
+    exit;
+});
+
 
 
 // POST routes
@@ -129,6 +168,28 @@ $router->post('/posts/store', function () use ($pdo) {
     header("Location: /");
     exit;
 });
+
+$router->post('/posts/update', function () use ($pdo) {
+    requireLogin();
+
+    $id = $_POST['id'] ?? null;
+    $title = trim($_POST['title'] ?? '');
+    $content = trim($_POST['content'] ?? '');
+
+    if (!$id || $title === '' || $content === '') {
+        die("Chýbajú údaje alebo sú neplatné.");
+    }
+
+    $stmt = $pdo->prepare(
+        "UPDATE posts SET title = ?, content = ? WHERE id = ? AND user_id = ?"
+    );
+
+    $stmt->execute([$title, $content, $id, $_SESSION['user_id']]);
+
+    header("Location: /");
+    exit;
+});
+
 
 
 
