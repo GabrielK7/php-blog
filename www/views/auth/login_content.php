@@ -1,6 +1,7 @@
 <?php if (isset($_GET['error'])): ?>
     <p style="color:red;">Neplatné prihlasovacie údaje</p>
 <?php endif; ?>
+
 <h2>Prihlásenie</h2>
 <form action="/login" method="post">
     <label>Username:</label><br>
@@ -11,3 +12,4 @@
 
     <button type="submit">Prihlásiť</button>
 </form>
+

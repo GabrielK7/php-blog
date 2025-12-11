@@ -1,12 +1,10 @@
 <?php
-// www/index.php
 
-// session musí byť spustená pred výstupom
 session_start();
 
 // načítanie Routera a DB pripojenia
 require __DIR__ . '/src/Router.php';
-require __DIR__ . '/src/db.php';   // musí nastaviť $pdo
+require __DIR__ . '/src/db.php';  
 
 function requireLogin()
 {
@@ -15,18 +13,16 @@ function requireLogin()
         exit;
     }
 }
-// vytvoríme router
+
 $router = new Router();
 
 // GET routes
 
 $router->get('/login', function () {
-     $content = __DIR__ . '/views/auth/login.php';
-    require __DIR__ . '/views/layout.php';
+    require __DIR__ . '/views/auth/login.php';
 });
 $router->get('/register', function () {
-    $content = __DIR__ . '/views/auth/register.php';
-    require __DIR__ . '/views/layout.php';
+    require __DIR__ . '/views/auth/register.php';
 });
 $router->get('/', function () use ($pdo) {
 
@@ -43,7 +39,7 @@ $router->get('/posts/create', function () {
     requireLogin(); // presmeruje na /login, ak nie je prihlásený
 
     $title = "Nový článok";
-    $content = __DIR__ . '/views/posts/create_content.php'; // tu musí byť $content
+    $content = __DIR__ . '/views/posts/create_content.php'; 
 
     require __DIR__ . '/views/layout.php';
 });
@@ -101,7 +97,7 @@ $router->post('/login', function () use ($pdo) {
         exit;
     }
 
-    // nájdeme používateľa podľa username (alebo email, ak používate email ako username)
+    // nájdeme používateľa podľa username 
     $stmt = $pdo->prepare("SELECT id, username, password FROM users WHERE username = ? LIMIT 1");
     $stmt->execute([$username]);
     $user = $stmt->fetch();
@@ -111,7 +107,7 @@ $router->post('/login', function () use ($pdo) {
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['username'] = $user['username'];
 
-        // redirect na domov alebo dashboard
+        // redirect na domov 
         header('Location: /');
         exit;
     } else {
@@ -127,7 +123,7 @@ $router->post('/register', function () use ($pdo) {
     $password = $_POST['password'] ?? '';
     $password2 = $_POST['password2'] ?? '';
 
-    // Jednoduchá validácia
+    // validácia
     if ($username === '' || $password === '' || $password2 === '') {
         die("Vyplň všetky polia.");
     }
@@ -193,7 +189,7 @@ $router->post('/posts/update', function () use ($pdo) {
 
 
 
-// logout route (rýchlo)
+// logout 
 $router->get('/logout', function () {
 
     session_unset();
