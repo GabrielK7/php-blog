@@ -4,7 +4,7 @@ session_start();
 
 // načítanie Routera a DB pripojenia
 require __DIR__ . '/src/Router.php';
-require __DIR__ . '/src/db.php';  
+require __DIR__ . '/src/db.php';
 
 function requireLogin()
 {
@@ -28,8 +28,15 @@ $router->get('/', function () use ($pdo) {
 
     $userLoggedIn = isset($_SESSION['user_id']);
 
-    $stmt = $pdo->query("SELECT * FROM posts ORDER BY created_at DESC");
-    $posts = $stmt->fetchAll();
+   $stmt = $pdo->query("
+    SELECT posts.*, users.username
+    FROM posts
+    JOIN users ON posts.user_id = users.id
+    ORDER BY posts.created_at DESC
+");
+
+$posts = $stmt->fetchAll();
+
 
     $content = __DIR__ . '/views/home_content.php';
     require __DIR__ . '/views/layout.php';
@@ -39,7 +46,7 @@ $router->get('/posts/create', function () {
     requireLogin(); // presmeruje na /login, ak nie je prihlásený
 
     $title = "Nový článok";
-    $content = __DIR__ . '/views/posts/create_content.php'; 
+    $content = __DIR__ . '/views/posts/create_content.php';
 
     require __DIR__ . '/views/layout.php';
 });
@@ -62,6 +69,35 @@ $router->get('/posts/edit', function () use ($pdo) {
 
     $title = "Upraviť článok";
     $content = __DIR__ . '/views/posts/edit_content.php';
+    require __DIR__ . '/views/layout.php';
+});
+
+$router->get('/post', function () use ($pdo) {
+    if (!isset($_GET['id'])) {
+        echo "Chýba ID článku.";
+        return;
+    }
+    $id = $_GET['id'];
+    $stmt = $pdo->prepare("
+        SELECT posts.*, users.username
+        FROM posts
+        JOIN users ON posts.user_id = users.id
+        WHERE posts.id = ?
+    ");
+    $stmt->execute([$id]);
+    $post = $stmt->fetch();
+
+    if (!$post) {
+        echo "Článok neexistuje.";
+        return;
+    }
+
+    $title = $post['title'];
+    $content = __DIR__ . '/views/posts/detail.php';
+
+    // premenná použitá vo view
+    $postData = $post;
+
     require __DIR__ . '/views/layout.php';
 });
 
@@ -119,7 +155,7 @@ $router->post('/login', function () use ($pdo) {
 
 $router->post('/register', function () use ($pdo) {
     $username = trim($_POST['username'] ?? '');
-    $email = trim($_POST['email'] ?? '');
+    //$email = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
     $password2 = $_POST['password2'] ?? '';
 

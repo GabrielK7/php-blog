@@ -14,11 +14,23 @@ body {
 }
 
 .post {
-    border: 1px solid #ddd;
+    border: 1px solid #ccc;
     padding: 15px;
-    border-radius: 6px;
-    margin-bottom: 15px;
+    margin-bottom: 20px;  
+    border-radius: 5px;
+    background: #fafafa;
 }
+.post-info {
+    color: #666;
+    margin-top: 6px;
+    font-size: 0.9em;
+}
+
+.post-info .separator {
+    margin: 0 7px;
+}
+
+
 
 input, textarea {
     width: 100%;

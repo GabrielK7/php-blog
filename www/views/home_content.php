@@ -10,9 +10,15 @@
             <article style="margin-bottom: 20px;">
                 <div class="post">
                     <h3><?= htmlspecialchars($post['title']) ?></h3>
-                    <p><?= nl2br(htmlspecialchars($post['content'])) ?></p>
+                    <p><?= nl2br(htmlspecialchars(substr($post['content'], 0, 200))) ?>...</p>
+                    <a href="/post?id=<?= $post['id'] ?>" class="read-more">Čítať viac</a>                   
                 </div>
+                <p class="post-info">
                 <small>Publikované: <?= $post['created_at'] ?></small>
+                <span class="separator">|</span>
+                <small>Autor: <?= $post['username'] ?></small>
+                </p>        
+
                 <?php if ($userLoggedIn && $post['user_id'] == $_SESSION['user_id']): ?>
                     <div>
                         <a href="/posts/edit?id=<?= $post['id'] ?>">Upraviť</a> |
