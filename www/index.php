@@ -6,6 +6,8 @@ session_start();
 require __DIR__ . '/src/Router.php';
 require __DIR__ . '/src/db.php';
 
+use Router;
+
 function requireLogin()
 {
     if (!isset($_SESSION['user_id'])) {
@@ -101,6 +103,26 @@ $router->get('/post', function () use ($pdo) {
     require __DIR__ . '/views/layout.php';
 });
 
+$router->get('/posts', function () use ($pdo) {
+
+    
+    $stmt = $pdo->query("
+        SELECT posts.id, posts.title, users.username
+        FROM posts
+        JOIN users ON posts.user_id = users.id
+        ORDER BY posts.id DESC
+    ");
+    $posts = $stmt->fetchAll();
+
+    
+    $title = 'Články';
+    $content = __DIR__ . '/views/posts/index.php';
+
+    
+    require __DIR__ . '/views/layout.php';
+});
+
+
 
 
 $router->get('/posts/delete', function () use ($pdo) {
@@ -123,7 +145,7 @@ $router->get('/posts/delete', function () use ($pdo) {
 
 // POST routes
 $router->post('/login', function () use ($pdo) {
-    // spracovanie prihlasenia
+   
     $username = trim($_POST['email'] ?? $_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
 
@@ -133,21 +155,21 @@ $router->post('/login', function () use ($pdo) {
         exit;
     }
 
-    // nájdeme používateľa podľa username 
+    
     $stmt = $pdo->prepare("SELECT id, username, password FROM users WHERE username = ? LIMIT 1");
     $stmt->execute([$username]);
     $user = $stmt->fetch();
 
     if ($user && password_verify($password, $user['password'])) {
-        // úspešné prihlásenie
+        
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['username'] = $user['username'];
 
-        // redirect na domov 
+        
         header('Location: /');
         exit;
     } else {
-        // neplatné údaje
+      
         header('Location: /login?error=1');
         exit;
     }
@@ -180,6 +202,9 @@ $router->post('/register', function () use ($pdo) {
     exit;
 });
 
+$router->get('/add-post', function () {
+    require 'views/posts/create_content.php';
+});
 $router->post('/posts/store', function () use ($pdo) {
     requireLogin();
 

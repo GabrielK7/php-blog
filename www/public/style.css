@@ -1,8 +1,22 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+}
+
 body {
     font-family: Arial, sans-serif;
     background: #f7f7f7;
-    margin: 0;
-    padding: 0;
+}
+
+.page-wrapper {
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+}
+
+main {
+    width: 100%;
 }
 
 .container {
@@ -11,15 +25,18 @@ body {
     background: white;
     padding: 20px;
     border-radius: 6px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .post {
     border: 1px solid #ccc;
     padding: 15px;
-    margin-bottom: 20px;  
+    margin-bottom: 20px;
     border-radius: 5px;
     background: #fafafa;
 }
+
 .post-info {
     color: #666;
     margin-top: 6px;
@@ -30,9 +47,8 @@ body {
     margin: 0 7px;
 }
 
-
-
-input, textarea {
+input,
+textarea {
     width: 100%;
     padding: 8px;
     margin-bottom: 12px;
@@ -48,33 +64,33 @@ button {
     border-radius: 4px;
     cursor: pointer;
 }
+
 button:hover {
     background: #005bbb;
 }
 
 header {
-    background: #333;          
+    background: #333;
     padding: 10px 20px;
 }
 
 article {
-    border: 1px solid #ccc;    
-    padding: 10px;             
-    margin-bottom: 20px;       
-    border-radius: 5px;        
-    background: #fafafa;      
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    background: #fafafa;
 }
 
-
 nav a {
-    color: white;              
-    margin-right: 15px;        
-    text-decoration: none;     
+    color: white;
+    margin-right: 15px;
+    text-decoration: none;
     font-weight: bold;
 }
 
 nav a:hover {
-    text-decoration: underline; 
+    text-decoration: underline;
 }
 
 footer {
@@ -82,7 +98,4 @@ footer {
     padding: 10px;
     background: #333;
     color: white;
-    margin-top: 20px;
 }
-
-
