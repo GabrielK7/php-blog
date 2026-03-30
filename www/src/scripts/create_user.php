@@ -1,8 +1,8 @@
 <?php
-require __DIR__ . '/src/db.php';
+require __DIR__ . '/../db.php';
 
 $username = 'testuser';
-$password = 'heslo123'; // zmeň podľa potreby
+$password = 'heslo123'; 
 
 $hash = password_hash($password, PASSWORD_DEFAULT);
 

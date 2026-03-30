@@ -7,8 +7,9 @@ Simple blog application built with PHP.
 - Public blog with articles
 - Article detail page
 - Login / logout
-- Admin section for managing posts
+- Admin section with full post management (CRUD)
 - Responsive layout
+- Custom routing system (self-built Router)
 
 ## Technologies
 
@@ -18,7 +19,12 @@ Simple blog application built with PHP.
 
 ## Live Demo
 
-https://blog-gkovacs.infinityfree.me
+Currently not deployed.  
+The project can be run locally.
+
+## Screenshots
+
+![Add article page](AddArticle.png) ![Articles list](Articles.png) ![Homepage](Home.png) ![Login page](Login.png)
 
 ## Demo Account
 

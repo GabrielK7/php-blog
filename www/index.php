@@ -2,7 +2,7 @@
 
 session_start();
 
-// načítanie Routera a DB pripojenia
+
 require __DIR__ . '/src/Router.php';
 require __DIR__ . '/src/db.php';
 
@@ -18,7 +18,7 @@ function requireLogin()
 
 $router = new Router();
 
-// GET routes
+
 
 $router->get('/login', function () {
     require __DIR__ . '/views/auth/login.php';
@@ -45,7 +45,7 @@ $posts = $stmt->fetchAll();
 });
 
 $router->get('/posts/create', function () {
-    requireLogin(); // presmeruje na /login, ak nie je prihlásený
+    requireLogin(); 
 
     $title = "Nový článok";
     $content = __DIR__ . '/views/posts/create_content.php';
@@ -97,7 +97,7 @@ $router->get('/post', function () use ($pdo) {
     $title = $post['title'];
     $content = __DIR__ . '/views/posts/detail.php';
 
-    // premenná použitá vo view
+   
     $postData = $post;
 
     require __DIR__ . '/views/layout.php';
@@ -143,14 +143,14 @@ $router->get('/posts/delete', function () use ($pdo) {
 
 
 
-// POST routes
+
 $router->post('/login', function () use ($pdo) {
    
     $username = trim($_POST['email'] ?? $_POST['username'] ?? '');
     $password = $_POST['password'] ?? '';
 
     if ($username === '' || $password === '') {
-        // redirect späť s chybou
+       
         header('Location: /login?error=1');
         exit;
     }
@@ -181,7 +181,7 @@ $router->post('/register', function () use ($pdo) {
     $password = $_POST['password'] ?? '';
     $password2 = $_POST['password2'] ?? '';
 
-    // validácia
+
     if ($username === '' || $password === '' || $password2 === '') {
         die("Vyplň všetky polia.");
     }
@@ -190,14 +190,14 @@ $router->post('/register', function () use ($pdo) {
         die("Heslá sa nezhodujú.");
     }
 
-    // Hash hesla
+
     $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-    // Uloženie do DB
+   
     $stmt = $pdo->prepare("INSERT INTO users (username, password) VALUES (?, ?)");
     $stmt->execute([$username, $hashedPassword]);
 
-    // Po úspechu presmerovanie na login
+
     header("Location: /login");
     exit;
 });
@@ -250,7 +250,7 @@ $router->post('/posts/update', function () use ($pdo) {
 
 
 
-// logout 
+
 $router->get('/logout', function () {
 
     session_unset();
