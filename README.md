@@ -19,8 +19,13 @@ Simple blog application built with PHP.
 
 ## Live Demo
 
-Currently not deployed.  
-The project can be run locally.
+http://gk-blog.42web.io/
+
+## Demo Access
+
+- Username: testuser  
+- Password: heslo123
+
 
 ## Screenshots
 
